@@ -1,8 +1,17 @@
+const cardsDiv = document.querySelector(".cards");
+
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
+
+import axios from 'axios';
+function makeAndShowUserCard(username) {
+  axios.get(`https://api.github.com/users/${username}`)
+    .then(resp => cardsDiv.appendChild(makeCard(resp.data)))
+    .catch(err => console.log(err));
+}
 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
@@ -17,6 +26,8 @@
     and append the returned markup to the DOM as a child of .cards
 */
 
+makeAndShowUserCard("DanielReinagel");
+
 /*
   STEP 5: Now that you have your own card getting added to the DOM, either
     follow this link in your browser https://api.github.com/users/<Your github name>/followers,
@@ -28,7 +39,9 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ["tetondan", "dustinmyers", "justsml", "luishrd", "bigknell"];
+
+followersArray.forEach(username => makeAndShowUserCard(username));
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -49,6 +62,49 @@ const followersArray = [];
       </div>
     </div>
 */
+
+function makeCard({ avatar_url, name, login, location, html_url, followers, following, bio }){
+  const cardDiv = document.createElement('div');
+  const userImg = document.createElement('img');
+  const cardInfoDiv = document.createElement('div');
+  const nameH = document.createElement('h3');
+  const usernameP = document.createElement('p');
+  const locationP = document.createElement('p');
+  const profileP = document.createElement('p');
+  const profileA = document.createElement('a');
+  const followersP = document.createElement('p');
+  const followingP = document.createElement('p');
+  const bioP = document.createElement('p');
+
+  cardDiv.className = "card";
+  cardInfoDiv.className = "card-info";
+  nameH.className = "name";
+  usernameP.className = "username";
+
+  userImg.src = avatar_url;
+  nameH.textContent = name;
+  usernameP.textContent = login;
+  locationP.textContent = `Location: ${location}`;
+  profileP.textContent = "Profile: "
+  profileA.textContent = html_url;
+  profileA.href = html_url;
+  followersP.textContent = `Followers: ${followers}`;
+  followingP.textContent = `Following: ${following}`;
+  bioP.textContent = `Bio: ${bio}`;
+
+  cardDiv.appendChild(userImg);
+  cardDiv.appendChild(cardInfoDiv);
+  cardInfoDiv.appendChild(nameH);
+  cardInfoDiv.appendChild(usernameP);
+  cardInfoDiv.appendChild(locationP);
+  cardInfoDiv.appendChild(profileP);
+  cardInfoDiv.appendChild(followersP);
+  cardInfoDiv.appendChild(followingP);
+  cardInfoDiv.appendChild(bioP);
+  profileP.appendChild(profileA);
+
+  return cardDiv;
+}
 
 /*
   List of LS Instructors Github username's:
